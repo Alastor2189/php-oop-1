@@ -25,33 +25,89 @@ metodi d'istanza che abbiamo visto stamattina e create un file index.php in cui:
         public $genre;
         public $author;
         public $year;
-        public $vote;
+        public $grades;
+        public $language;
 
-        function __construct($_title, $_genre, $_author, $_year, $_vote = [])
+        function __construct($_title, $_genre, $_author, $_year, $_grades = [])
         {
             $this->title = $_title;
             $this->genre = $_genre;
             $this->author = $_author;
             $this->year = $_year;
-            $this->vote = $_vote;
+            $this->grades = $_grades;
         }
 
-        public function averagedVote()
+        public function generateLanguage($_language)
         {
+            $this->language[] = $_language;
+        }
+
+        public function insertLanguage()
+        {
+            return "Lingua:" . $this->language;
+        }
+        public function insertVote($_grade)
+        {
+            $this->grades[] = $_grade;
+        }
+        public function averageVote()
+        {
+            $gradesSum = 0;
+            foreach ($this->grades as $grade) {
+                $gradesSum += $grade;
+            }
+            $avgGrade = $gradesSum / count($this->grades);
+            return $avgGrade;
         }
     }
 
 
-    $rambo = new movie("First blood", "Azione", "Ted Kotcheff", "1982");
+    $rambo = new movie("Rambo: First blood", "Azione", "Ted Kotcheff", "1982");
+    $rambo->insertVote(8);
+    $rambo->insertVote(6);
+    $rambo->insertVote(9);
+    $rambo->insertLanguage("english");
+    $rambo->insertLanguage("italian");
+
     var_dump($rambo);
 
     $rambo_2 = new movie("Rambo: First Blood Part II", "Azione", "George Pan Cosmatos", "1985");
+    $rambo_2->insertVote(7);
+    $rambo_2->insertVote(10);
+    $rambo_2->insertVote(8);
+    $rambo_2->insertLanguage("english");
+    $rambo_2->insertLanguage("dutch");
     var_dump($rambo_2);
 
     $rambo_3 = new movie("Rambo 3", "Azione", "Peter MacDonald", "1988");
+    $rambo_3->insertVote(7);
+    $rambo_3->insertVote(9);
+    $rambo_3->insertVote(8);
+    $rambo_3->insertLanguage("english");
+    $rambo_3->insertLanguage("espanol");
     var_dump($rambo_3);
 
+
+    $movies = [];
+    $movies[] = $rambo;
+    $movies[] = $rambo_2;
+    $movies[] = $rambo_3;
     ?>
+
+
+    <ul>
+        <?php foreach ($movies as $movie) { ?>
+            <li>
+                <h4>
+                    Titolo:<?php echo $movie->title; ?>
+                </h4>
+                <p> Genere: <?php echo $movie->genre; ?></p>
+                <p> Regista: <?php echo $movie->author; ?></p>
+                <p> Anno: <?php echo $movie->year; ?></p>
+                <p>Voto: <?php echo $movie->averageVote() ?></p>
+            </li>
+        <?php  }  ?>
+    </ul>
 </body>
 
 </html>
